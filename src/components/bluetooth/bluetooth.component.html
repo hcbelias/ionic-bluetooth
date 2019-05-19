@@ -1,6 +1,7 @@
 <div class="app">
   <div id="ui">
-    <button id="connectButton">Connect</button>
+    <button [hidden]="loaded" (click)="manageConnection()" id="connectButton" ion-button full>Connect</button>
+
   </div>
   <div id="message">Hello.</div>
 </div>

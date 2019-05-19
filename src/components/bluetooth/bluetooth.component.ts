@@ -11,24 +11,27 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 export class BluetoothComponent {
     public macAddress = "00:1F:20:74:C2:73";
     public chars = "";
+    private loaded = false;
 
-    constructor() {
+    constructor(private platform: Platform, private splashScreen: SplashScreen, private statusBar: StatusBar) {
         this.initializeApp();
     }
 
     initializeApp() {
-        this.bindEvents();
+        this.platform.ready().then(() => {
+            this.onDeviceReady();
+            this.statusBar.styleDefault();
+            this.splashScreen.hide();
+        });
     }
-    bindEvents() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
-        connectButton.addEventListener('touchend', this.manageConnection, false);
-    }
+    
     onDeviceReady() {
         var listPorts = function () {
             debugger;
             bluetoothSerial.list(
                 (results) => {
                     this.display(JSON.stringify(results));
+                    this.loaded = true;
                 },
                 (error) => {
                     this.display(JSON.stringify(error));
@@ -75,7 +78,6 @@ export class BluetoothComponent {
     openPort() {
         debugger;
         this.display("Connected to: " + this.macAddress);
-        connectButton.innerHTML = "Disconnect";
         bluetoothSerial.subscribe('\n', function (data) {
             this.clear();
             this.display(data);
@@ -84,7 +86,6 @@ export class BluetoothComponent {
 
     closePort() {
         this.display("Disconnected from: " + this.macAddress);
-        connectButton.innerHTML = "Connect";
         bluetoothSerial.unsubscribe(
             function (data) {
                 this.display(data);
