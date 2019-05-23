@@ -28,23 +28,23 @@ export class BluetoothComponent {
     }
 
     onDeviceReady() {
-        var listPorts = function () {
+        var listPorts = () => {
             debugger;
             BluetoothSerial.list().then(
                 (results) => {
                     console.log(`listports    ` + results);
-                    this.display(JSON.stringify(results));
+                    console.log(JSON.stringify(results));
                     this.loaded = true;
                 }).catch(
                     (error) => {
                         console.log(`listports    errr    ` + error);
-                        this.display(JSON.stringify(error));
+                        console.log(JSON.stringify(error));
                     }
                 );
         };
 
 
-        var notEnabled = function () {
+        var notEnabled = () => {
 
             console.log("Bluetooth is not enabled.")
         }
@@ -69,7 +69,7 @@ export class BluetoothComponent {
 
             console.log(`connect    init`);
             
-            this.display("Attempting to connect. " +
+            console.log("Attempting to connect. " +
                 "Make sure the serial port is open on the target device.");
             // attempt to connect:
             BluetoothSerial.connect(
@@ -83,7 +83,7 @@ export class BluetoothComponent {
         };
 
         var disconnect = () => {
-            this.display("attempting to disconnect");
+            console.log("attempting to disconnect");
             BluetoothSerial.disconnect().then(this.closePort).catch(this.showError);
         };
 
@@ -93,24 +93,25 @@ export class BluetoothComponent {
         }).catch(err => {
             console.log(`isconnecte   err`  + err);
             debugger;
+            connect();
         });
     }
 
     openPort() {
         debugger;
-         this.display("Connected to: " + this.macAddress);
+         console.log("Connected to: " + this.macAddress);
          /*
            this.connection.subscribe('\n', function (data) {
                this.clear();
-               this.display(data);
+               console.log(data);
            });*/
     }
 
     closePort() {
-        this.display("Disconnected from: " + this.macAddress);
+        console.log("Disconnected from: " + this.macAddress);
         /*     BluetoothSerial.unsubscribe(
                   function (data) {
-                      this.display(data);
+                      console.log(data);
                   },
                   this.showError
               );
@@ -119,7 +120,7 @@ export class BluetoothComponent {
 
     showError(error) {
         debugger;
-        this.display(error);
+        console.log(error);
     }
 
     display(message) {
