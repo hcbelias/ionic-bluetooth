@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
 
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -24,29 +25,35 @@ export class BluetoothComponent {
             this.splashScreen.hide();
         });
     }
-    
+
     onDeviceReady() {
         var listPorts = function () {
             debugger;
-            bluetoothSerial.list(
+            BluetoothSerial.list().then(
                 (results) => {
                     this.display(JSON.stringify(results));
                     this.loaded = true;
-                },
-                (error) => {
-                    this.display(JSON.stringify(error));
-                }
-            );
-        }
+                }).catch(
+                    (error) => {
+                        this.display(JSON.stringify(error));
+                    }
+                );
+        };
+
 
         var notEnabled = function () {
             this.display("Bluetooth is not enabled.")
         }
 
-        bluetoothSerial.isEnabled(
-            listPorts,
-            notEnabled
-        );
+        BluetoothSerial.isEnabled(
+        ).then(data => {
+            debugger;
+
+            listPorts();
+        }).catch((err) => {
+            debugger;
+            notEnabled();
+        });
     }
 
     manageConnection() {
@@ -57,41 +64,45 @@ export class BluetoothComponent {
             this.display("Attempting to connect. " +
                 "Make sure the serial port is open on the target device.");
             // attempt to connect:
-            bluetoothSerial.connect(
+            BluetoothSerial.connect(
                 this.macAddress,  // device to connect to
-                this.openPort,    // start listening if you succeed
-                this.showError    // show the error if you fail
-            );
+                //              this.openPort,    // start listening if you succeed
+                //                this.showError    // show the error if you fail
+            ).subscribe(connect => {
+                debugger;
+            });
         };
 
         var disconnect = () => {
             this.display("attempting to disconnect");
-            bluetoothSerial.disconnect(
-                this.closePort,     // stop listening to the port
-                this.showError      // show the error if you fail
-            );
+            BluetoothSerial.disconnect().then(this.closePort).catch(this.showError);
         };
 
-        bluetoothSerial.isConnected(disconnect, connect);
+        BluetoothSerial.isConnected().then(data => {
+            debugger;
+        }).catch(err => {
+            debugger;
+        });
     }
 
     openPort() {
         debugger;
-        this.display("Connected to: " + this.macAddress);
-        bluetoothSerial.subscribe('\n', function (data) {
+     /*   this.display("Connected to: " + this.macAddress);
+        this.connection.subscribe('\n', function (data) {
             this.clear();
             this.display(data);
-        });
+        });*/
     }
 
     closePort() {
         this.display("Disconnected from: " + this.macAddress);
-        bluetoothSerial.unsubscribe(
+  /*     BluetoothSerial.unsubscribe(
             function (data) {
                 this.display(data);
             },
             this.showError
         );
+        */
     }
 
     showError(error) {

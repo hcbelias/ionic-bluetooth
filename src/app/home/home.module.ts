@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 
+import { BluetoothModule } from '../../components/bluetooth/bluetooth.module';
+
+
 
 import { HomePage } from './home.page';
 
@@ -12,6 +15,7 @@ import { HomePage } from './home.page';
     CommonModule,
     FormsModule,
     IonicModule,
+    BluetoothModule,
     RouterModule.forChild([
       {
         path: '',
@@ -21,4 +25,4 @@ import { HomePage } from './home.page';
   ],
   declarations: [HomePage]
 })
-export class HomePageModule {}
+export class HomePageModule { }

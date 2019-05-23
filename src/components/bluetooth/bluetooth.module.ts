@@ -12,6 +12,7 @@ import { BluetoothComponent } from './bluetooth.component';
     FormsModule,
     IonicModule
   ],
-  declarations: [BluetoothComponent]
+  declarations: [BluetoothComponent],
+  exports: [BluetoothComponent]
 })
 export class BluetoothModule {}
