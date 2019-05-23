@@ -20,6 +20,7 @@ export class BluetoothComponent {
 
     initializeApp() {
         this.platform.ready().then(() => {
+            console.log(`done`);
             this.onDeviceReady();
             this.statusBar.styleDefault();
             this.splashScreen.hide();
@@ -31,10 +32,12 @@ export class BluetoothComponent {
             debugger;
             BluetoothSerial.list().then(
                 (results) => {
+                    console.log(`listports    ` + results);
                     this.display(JSON.stringify(results));
                     this.loaded = true;
                 }).catch(
                     (error) => {
+                        console.log(`listports    errr    ` + error);
                         this.display(JSON.stringify(error));
                     }
                 );
@@ -42,15 +45,18 @@ export class BluetoothComponent {
 
 
         var notEnabled = function () {
-            this.display("Bluetooth is not enabled.")
+
+            console.log("Bluetooth is not enabled.")
         }
 
         BluetoothSerial.isEnabled(
         ).then(data => {
             debugger;
+            console.log(`enabled    ` + data);
 
             listPorts();
         }).catch((err) => {
+            console.log(`enabled    err` + err);
             debugger;
             notEnabled();
         });
@@ -60,7 +66,9 @@ export class BluetoothComponent {
         debugger;
         var connect = () => {
             debugger;
-            this.clear();
+
+            console.log(`connect    init`);
+            
             this.display("Attempting to connect. " +
                 "Make sure the serial port is open on the target device.");
             // attempt to connect:
@@ -69,6 +77,7 @@ export class BluetoothComponent {
                 //              this.openPort,    // start listening if you succeed
                 //                this.showError    // show the error if you fail
             ).subscribe(connect => {
+                console.log(`connect 2    ` + connect);
                 debugger;
             });
         };
@@ -79,30 +88,33 @@ export class BluetoothComponent {
         };
 
         BluetoothSerial.isConnected().then(data => {
+            console.log(`isconnected   ` + data);
             debugger;
         }).catch(err => {
+            console.log(`isconnecte   err`  + err);
             debugger;
         });
     }
 
     openPort() {
         debugger;
-     /*   this.display("Connected to: " + this.macAddress);
-        this.connection.subscribe('\n', function (data) {
-            this.clear();
-            this.display(data);
-        });*/
+         this.display("Connected to: " + this.macAddress);
+         /*
+           this.connection.subscribe('\n', function (data) {
+               this.clear();
+               this.display(data);
+           });*/
     }
 
     closePort() {
         this.display("Disconnected from: " + this.macAddress);
-  /*     BluetoothSerial.unsubscribe(
-            function (data) {
-                this.display(data);
-            },
-            this.showError
-        );
-        */
+        /*     BluetoothSerial.unsubscribe(
+                  function (data) {
+                      this.display(data);
+                  },
+                  this.showError
+              );
+              */
     }
 
     showError(error) {
@@ -111,16 +123,6 @@ export class BluetoothComponent {
     }
 
     display(message) {
-        var display = document.getElementById("message"), // the message div
-            lineBreak = document.createElement("br"),     // a line break
-            label = document.createTextNode(message);     // create the label
-
-        display.appendChild(lineBreak);          // add a line break
-        display.appendChild(label);              // add the message node
-    }
-
-    clear() {
-        var display = document.getElementById("message");
-        display.innerHTML = "";
+        console.log(`display ` + message);
     }
 }
